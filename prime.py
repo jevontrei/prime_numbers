@@ -7,6 +7,16 @@ os.system('clear')
 
 # The fundamental theorem of arithmetic: every natural number greater than 1 is either a prime itself or can be factorized as a product of primes that is unique up to their order.
 
+
+print("-----------------")
+
+# class prime_finder:
+# def __init__(self) -> None:
+# self
+
+
+print("-----------------")
+
 # Is it prime?
 
 
@@ -29,6 +39,7 @@ def is_it_prime(num):
             if num % n == 0:
                 return "Composite"
         return "Prime"
+
 
 # Universal print number:
 examples = 10
@@ -86,47 +97,80 @@ def find_factors(num, fn):
 print("-----------------------------")
 # Prime factorisation
 
-
-def prime_factorisation(num, fn):
-    """_summary_
-
-    Args:
-        num (_type_): _description_
-        fn (function): _description_
-
-    Returns:
-        _type_: _description_
-    """
-
-    factors = fn(num, is_it_prime)
-
-    if factors == f"N/A. Integer must be greater than 1.":
-        print()
-        return f"N/A; {num} is less than 2."
-
-    elif factors == "Prime.":
-        print()
-        return f"N/A; {num} is prime."
-
-    else:
-        # Prime factor decomposition = PFD
-        pfd = f""
-        for p in factors:
-            if p > 1:
-                exp = int(math.log(num, p))
-                if exp == 1:
-                    pfd += str(p) + " * "
-                else:
-                    pfd += str(p) + f"^{exp}" + " * "
-        print()
-        print(factors)
-        return f"The prime factorisation of {num} is: {pfd[:-3]}."
+# Do it top down, not bottom up!: e.g. 60 = 30 * 2 = 6 * 5 * 2 = 3 * 2 * 5 * 2 = 2^2 * 3 * 5
 
 
-# This isn't working! it prints e.g. "[1, 3] \n The prime factorisation of 9 is: 3^2.":
+def factorisation(num, primality_fn=is_it_prime, factors_fn=find_factors):
+    factors = find_factors(num, primality_fn)
+    pfd = []
+    # print(factors)
+    if type(factors) != list:
+        print("N/A")
+        return
+    for f in reversed(factors):
+        q = is_it_prime(int(num / f))
+        if q == "N/A. Integer must be greater than 1.":
+            continue
+        elif q == "Prime":
+            pfd.append(f)
+        else:
+            factors.append(f)
+    for k in factors:
+        if k > 1:
+            exp = factors.count(k)
+            k_exp = f"{k}^{exp}"
+            if k_exp not in pfd:
+                pfd.append(k_exp)
+    return pfd
+
 for k in range(examples):
-    result = prime_factorisation(k, find_factors)
-    print(result)
+    result = factorisation(k, is_it_prime, find_factors)
+    print(f"{k} is factorised into {result}.")
+
+
+# result = factorisation(4, is_it_prime, find_factors)
+# print(result)
+
+# def prime_factorisation(num, fn):
+#     """_summary_
+
+#     Args:
+#         num (_type_): _description_
+#         fn (function): _description_
+
+#     Returns:
+#         _type_: _description_
+#     """
+
+#     factors = fn(num, is_it_prime)
+
+#     if factors == f"N/A. Integer must be greater than 1.":
+#         print()
+#         return f"N/A; {num} is less than 2."
+
+#     elif factors == "Prime.":
+#         print()
+#         return f"N/A; {num} is prime."
+
+#     else:
+#         # Prime factor decomposition = PFD
+#         pfd = f""
+#         for p in factors:
+#             if p > 1:
+#                 exp = int(math.log(num, p))
+#                 if exp == 1:
+#                     pfd += str(p) + " * "
+#                 else:
+#                     pfd += str(p) + f"^{exp}" + " * "
+#         print()
+#         print(factors)
+#         return f"The prime factorisation of {num} is: {pfd[:-3]}."
+
+
+# # This isn't working! it prints e.g. "[1, 3] \n The prime factorisation of 9 is: 3^2.":
+# for k in range(examples):
+#     result = prime_factorisation(k, find_factors)
+#     print(result)
 
 # To test a single number:
 # print(prime_factorisation(4, find_factors))
